@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DirectShowCameraServer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyHomeServer.Models;
 using System;
@@ -9,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyHomeServer.Controllers
+namespace DirectShowCameraServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -29,10 +30,15 @@ namespace MyHomeServer.Controllers
         public IActionResult Get()
         {
             cam.Stop();
-            var path = Path.Combine("bmp.jpg");
-            byte[] b = System.IO.File.ReadAllBytes(path);
+            //var path = Path.Combine("c:\\", "bmp.jpg");
+            //if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            //byte[] b = System.IO.File.ReadAllBytes(path);
             cam.Start();
-            return File(b, "image/png");
+            if(db.lastImage != null)
+                return File(db.lastImage, "image/png");
+
+            return File(new byte[5], "image/png");
+
         }
 
     }

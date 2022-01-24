@@ -6,7 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace MyHomeServer
+namespace DirectShowCameraServer
 {
     public class WebCam2
     {
@@ -14,7 +14,7 @@ namespace MyHomeServer
 
         public WebCam2()
         {
-
+            Start();
         }
 
         /// <summary>
@@ -22,6 +22,9 @@ namespace MyHomeServer
         /// </summary>
         public void Start()
         {
+            if (videoSource != null)
+                return;
+
             var videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             if (videoDevices.Count == 0)
                 return;
@@ -37,13 +40,15 @@ namespace MyHomeServer
             {
                 if (DateTime.Now > lastUpdated.AddSeconds(msDelay / 1000))
                 {
-                    Bitmap current = e.Frame;
-                    var path = Path.Combine("bmp.jpg");
+                    //Bitmap current = e.Frame;
+                    //var path = Path.Combine("c:\\","bmp.jpg");
                     try
                     {
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        e.Frame.Save(path);
+                        //if (File.Exists(path))
+                        //    File.Delete(path);
+                        //e.Frame.Save(path);
+                        ImageConverter converter = new ImageConverter();
+                        db.lastImage = (byte[])converter.ConvertTo(e.Frame, typeof(byte[]));
                     }
                     catch (Exception e2)
                     {
